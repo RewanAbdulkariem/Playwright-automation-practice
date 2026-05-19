@@ -1,12 +1,8 @@
 import { test, expect } from '@playwright/test'
-import { HomePage } from '../Pages/HomePage';
-import { SignupPage } from '../Pages/SignupPage';
-import { AccountDetailsPage } from '../Pages/AccountDetailsPage';
+import { POManager } from '../Pages/poManager';
 
 //** Variables */
-let homePage: HomePage;
-let signupPage: SignupPage;
-let accountDetailsPage: AccountDetailsPage;
+let poManager: POManager;
 
 //** Hooks */
 test.beforeAll("Before all Tests", async () => {
@@ -14,28 +10,26 @@ test.beforeAll("Before all Tests", async () => {
 })
 
 test.beforeEach("Before each test", async({page}, testInfo) =>{
-    homePage = new HomePage(page);
-    await homePage.open();
+    poManager = new POManager(page);
+    await poManager.getHomepage().open();
     console.log(`Test starts for: ${testInfo.title}`);
 })
 
 test('Register new user', async ({page}) =>{
-    await homePage.verifyHomePageTitle();
-    await homePage.navigateToSignupLogin();
+    await poManager.getHomepage().verifyHomePageTitle();
+    await poManager.getHomepage().navigateToSignupLogin();
 
-    signupPage = new SignupPage(page);
 
-    await signupPage.verifySignupPageIsVisible();
-    await signupPage.signup();
+    await poManager.getSignupPage().verifySignupPageIsVisible();
+    await poManager.getSignupPage().signup();
 
-    accountDetailsPage = new AccountDetailsPage(page);
 
-    await accountDetailsPage.verifyAccountInfoPageIsVisible();
+    await poManager.getAccountDetailsPage().verifyAccountInfoPageIsVisible();
 
-    await accountDetailsPage.fillAccountDetails("123456", "1", "1", "2001");
+    await poManager.getAccountDetailsPage().fillAccountDetails("123456", "1", "1", "2001");
 
-    await accountDetailsPage.fillAddressDetails("Rewan", "Khaled", "123address", 1, "state", "city", "zip", "01022222");
+    await poManager.getAccountDetailsPage().fillAddressDetails("Rewan", "Khaled", "123address", 1, "state", "city", "zip", "01022222");
 
-    await accountDetailsPage.clickCreateAccount();
-    await accountDetailsPage.verifyAccountCreated();
+    await poManager.getAccountDetailsPage().clickCreateAccount();
+    await poManager.getAccountDetailsPage().verifyAccountCreated();
 })
